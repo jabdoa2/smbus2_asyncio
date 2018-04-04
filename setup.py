@@ -15,7 +15,7 @@ else:
 
 setup(
 
-    name='smbus2-version',
+    name='smbus2_asyncio',
     version=verstr,
     description='Asyncio support for SMBUS2',
     long_description='''I2C/SMBUS is does not provide an easy way to do
