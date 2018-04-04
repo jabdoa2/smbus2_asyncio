@@ -25,7 +25,7 @@ class SMBus2Asyncio:
 
     @asyncio.coroutine
     def open(self):
-        """Open synchronous."""
+        """Open async."""
         return self.loop.run_in_executor(self.executor, self.open_sync)
 
     @asyncio.coroutine
