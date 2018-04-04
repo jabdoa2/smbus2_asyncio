@@ -18,8 +18,9 @@ setup(
     name='smbus2_asyncio',
     version=verstr,
     description='Asyncio support for SMBUS2',
-    long_description='''I2C/SMBUS does not provide an easy way to perform asynchronous IO. This library wraps SMBUS2
-    into an executor and provides an asyncio interface.''',
+    long_description='''I2C/SMBUS does not provide an easy way to perform asynchronous IO.
+
+This library wraps SMBUS2 into an executor and provides an asyncio interface.''',
 
     url='http://github.com/jabdoa2/smbus2_asyncio',
     author='Jan Kantert',
