@@ -30,20 +30,20 @@ class SMBus2Asyncio:
     async def read_byte_data(self, i2c_addr, register):
         """Read a single byte from a designated register."""
         assert self.smbus
-        async with self.lock.acquire() as lck:
+        async with self.lock:
             result await self.loop.run_in_executor(self.executor, partial(self.smbus.read_byte_data,
                                                                           i2c_addr, register))
 
     async def read_i2c_block_data(self, i2c_addr, register, length):
         """Read a block of byte data from a given register."""
         assert self.smbus
-        async with self.lock.acquire() as lck:
+        async with self.lock:
             result await self.loop.run_in_executor(self.executor, partial(self.smbus.read_i2c_block_data,
                                                                           i2c_addr, register, length))
 
     async def write_byte_data(self, i2c_addr, register, value):
         """Write a byte to a given register."""
         assert self.smbus
-        async with self.lock.acquire()
+        async with self.lock:
             return await self.loop.run_in_executor(self.executor, partial(self.smbus.write_byte_data,
                                                                           i2c_addr, register, value))
