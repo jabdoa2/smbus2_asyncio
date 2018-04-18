@@ -23,37 +23,27 @@ class SMBus2Asyncio:
         """Open synchronous."""
         self.smbus = SMBus(self.bus)
 
-    @asyncio.coroutine
-    def open(self):
+    async def open(self):
         """Open async."""
         return self.loop.run_in_executor(self.executor, self.open_sync)
 
-    @asyncio.coroutine
-    def read_byte_data(self, i2c_addr, register):
+    async def read_byte_data(self, i2c_addr, register):
         """Read a single byte from a designated register."""
         assert self.smbus
-        yield from self.lock.acquire()
-        result = yield from self.loop.run_in_executor(self.executor, partial(self.smbus.read_byte_data,
-                                                                             i2c_addr, register))
-        self.lock.release()
-        return result
+        async with self.lock.acquire() as lck:
+            result await self.loop.run_in_executor(self.executor, partial(self.smbus.read_byte_data,
+                                                                          i2c_addr, register))
 
-    @asyncio.coroutine
-    def read_i2c_block_data(self, i2c_addr, register, length):
+    async def read_i2c_block_data(self, i2c_addr, register, length):
         """Read a block of byte data from a given register."""
         assert self.smbus
-        yield from self.lock.acquire()
-        result = yield from self.loop.run_in_executor(self.executor, partial(self.smbus.read_i2c_block_data,
-                                                                             i2c_addr, register, length))
-        self.lock.release()
-        return result
+        async with self.lock.acquire() as lck:
+            result await self.loop.run_in_executor(self.executor, partial(self.smbus.read_i2c_block_data,
+                                                                          i2c_addr, register, length))
 
-    @asyncio.coroutine
-    def write_byte_data(self, i2c_addr, register, value):
+    async def write_byte_data(self, i2c_addr, register, value):
         """Write a byte to a given register."""
         assert self.smbus
-        yield from self.lock.acquire()
-        result = yield from self.loop.run_in_executor(self.executor, partial(self.smbus.write_byte_data,
-                                                                             i2c_addr, register, value))
-        self.lock.release()
-        return result
+        async with self.lock.acquire()
+            return await self.loop.run_in_executor(self.executor, partial(self.smbus.write_byte_data,
+                                                                          i2c_addr, register, value))
