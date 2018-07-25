@@ -5,18 +5,14 @@ from setuptools import setup
 
 #  http://stackoverflow.com/questions/458550/standard-way-to-embed-version-into-python-package
 VERSIONFILE = "smbus2_asyncio/version.py"
-verstrline = open(VERSIONFILE, "rt").read()
-VSRE = r"^__version__ = ['\"]([^'\"]*)['\"]"
-mo = re.search(VSRE, verstrline, re.M)
-if mo:
-    verstr = mo.group(1)
-else:
-    raise RuntimeError("Unable to find version string in %s." % (VERSIONFILE,))
+exec(open(VERSIONFILE).read())
 
 setup(
 
     name='smbus2_asyncio',
-    version=verstr,
+    packages=["smbus2_asyncio"],
+    # Use `__version__` as defined in the `VERSIONFILE`.
+    version=__version__, # pylint: disable=undefined-variable
     description='Asyncio support for SMBUS2',
     long_description='''I2C/SMBUS does not provide an easy way to perform asynchronous IO.
 
@@ -34,6 +30,7 @@ This library wraps SMBUS2 into an executor and provides an asyncio interface.'''
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Natural Language :: English',
         'Operating System :: POSIX :: Linux',
     ],
