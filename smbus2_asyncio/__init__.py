@@ -1,6 +1,5 @@
 """Smbus2 asyncio support."""
 import asyncio
-from functools import partial
 
 from smbus2 import SMBus
 
@@ -33,9 +32,11 @@ class SMBus2Asyncio:
         """Read a single byte from a designated register."""
         assert self.smbus
         yield from self.lock.acquire()
-        result = yield from self.loop.run_in_executor(self.executor, partial(self.smbus.read_byte_data,
-                                                                             i2c_addr, register))
-        self.lock.release()
+        try:
+          result = yield from self.loop.run_in_executor(
+            self.executor, self.smbus.read_byte_data, i2c_addr, register)
+        finally:
+          self.lock.release()
         return result
 
     @asyncio.coroutine
@@ -43,9 +44,11 @@ class SMBus2Asyncio:
         """Read a block of byte data from a given register."""
         assert self.smbus
         yield from self.lock.acquire()
-        result = yield from self.loop.run_in_executor(self.executor, partial(self.smbus.read_i2c_block_data,
-                                                                             i2c_addr, register, length))
-        self.lock.release()
+        try:
+          result = yield from self.loop.run_in_executor(
+            self.executor, self.smbus.read_i2c_block_data, i2c_addr, register, length)
+        finally:
+          self.lock.release()
         return result
 
     @asyncio.coroutine
@@ -53,7 +56,22 @@ class SMBus2Asyncio:
         """Write a byte to a given register."""
         assert self.smbus
         yield from self.lock.acquire()
-        result = yield from self.loop.run_in_executor(self.executor, partial(self.smbus.write_byte_data,
-                                                                             i2c_addr, register, value))
-        self.lock.release()
+        try:
+          result = yield from self.loop.run_in_executor(
+            self.executor, self.smbus.write_byte_data, i2c_addr, register, value)
+        finally:
+          self.lock.release()
+
+        return result
+
+    @asyncio.coroutine
+    def write_i2c_block_data(self, i2c_addr, register, data):
+        """Write a block of byte data to a given register."""
+        assert self.smbus
+        yield from self.lock.acquire()
+        try:
+          result = yield from self.loop.run_in_executor(
+            self.executor, self.smbus.write_i2c_block_data, i2c_addr, register, data)
+        finally:
+          self.lock.release()
         return result
