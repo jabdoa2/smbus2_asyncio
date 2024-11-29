@@ -67,3 +67,23 @@ class SMBus2Asyncio:
             )
 
         return result
+    
+    async def write_quick(self, i2c_addr):
+        """Perform quick transaction. Throws IOError if unsuccessful."""
+        assert self.smbus
+        async with self.lock:
+            result = await self.loop.run_in_executor(
+                self.executor, self.smbus.write_quick, i2c_addr
+            )
+
+        return result
+
+    async def i2c_rdwr(self, *i2c_msgs):
+        """Perform a series of I2C transactions."""
+        assert self.smbus
+        async with self.lock:
+            result = await self.loop.run_in_executor(
+                self.executor, self.smbus.i2c_rdwr, *i2c_msgs
+            )
+
+        return result
