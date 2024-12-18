@@ -26,6 +26,15 @@ class SMBus2Asyncio:
         """Open async."""
         return await self.loop.run_in_executor(self.executor, self.open_sync)
 
+    async def close(self):
+        """close async."""
+        assert self.smbus
+        async with self.lock:
+            result = await self.loop.run_in_executor(
+                self.executor, self.smbus.close
+            )
+        return result
+
     async def read_byte_data(self, i2c_addr, register):
         """Read a single byte from a designated register."""
         assert self.smbus
